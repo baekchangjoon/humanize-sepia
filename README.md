@@ -42,9 +42,13 @@ Model-specific writing gains and lower latency are not established features. Exp
 
 ## Install
 
-This is a fork of `yeomin4242/humanize-sepia` 0.4.3 adapted for technical channels (GitHub PR descriptions, Jira tickets, Confluence explainers, implementation plans, internal tech blogs). The skill name is `humanize-sepia-cj`, so it can be installed next to the original `humanize-sepia`. See [README.ko.md](README.ko.md#설치) and [FORK-NOTES.md](FORK-NOTES.md).
+This is a fork of `yeomin4242/humanize-sepia` 0.4.3 adapted for technical channels (GitHub PR descriptions, Jira tickets, Confluence explainers, implementation plans, internal tech blogs). The skill name is `humanize-sepia-cj`, so it can be installed next to the original `humanize-sepia`. Changes are listed in [FORK-NOTES.md](FORK-NOTES.md).
+
+Requirements: `git` and `python3` (the skill runs a bundled check script). `pytest` is needed only for the optional self-test (`python3 -m pip install pytest`).
 
 ### Claude Code (recommended)
+
+Download the tagged version and copy the skill folder to your personal skill directory:
 
 ```bash
 git clone --branch v0.4.3-cj.2 --depth 1 https://github.com/baekchangjoon/humanize-sepia.git /tmp/humanize-sepia
@@ -54,7 +58,19 @@ cp -R /tmp/humanize-sepia/skills/humanize-sepia ~/.claude/skills/humanize-sepia-
 rm -rf /tmp/humanize-sepia
 ```
 
-To update, rerun with a newer tag. A symlink install (`ln -s ~/src/humanize-sepia/skills/humanize-sepia ~/.claude/skills/humanize-sepia-cj`) also works, but Claude Code may ask for read permission on `references/` because the link target is outside the working folder.
+To update, rerun the commands with a newer tag. The `rm -rf` line deletes the existing installation, so back up any local edits first. For project-local use, replace every `~/.claude/skills` with the project's `.claude/skills`.
+
+### Claude Code (symlink)
+
+To keep one clone and update with `git pull`, link the skill folder instead:
+
+```bash
+git clone https://github.com/baekchangjoon/humanize-sepia.git ~/src/humanize-sepia
+mkdir -p ~/.claude/skills
+ln -s ~/src/humanize-sepia/skills/humanize-sepia ~/.claude/skills/humanize-sepia-cj
+```
+
+Because the link target is outside your working folder, Claude Code may ask for read permission when the skill opens files in `references/`. Use the copy install to avoid these prompts.
 
 ### Codex
 
@@ -64,7 +80,23 @@ mkdir -p ~/.agents/skills
 ln -s ~/src/humanize-sepia/skills/humanize-sepia ~/.agents/skills/humanize-sepia-cj
 ```
 
-Requires `python3` for the bundled check script (`python3 -m pytest -q ~/.claude/skills/humanize-sepia-cj/tests`).
+### Verify the installation
+
+Check the installed version (use `.claude/skills` for a project install, `~/.agents/skills` for Codex):
+
+```bash
+grep '^  version' ~/.claude/skills/humanize-sepia-cj/SKILL.md
+```
+
+Expected output: `  version: "0.4.3-cj.2"`. Then start a new Claude Code session and confirm `/humanize-sepia-cj` appears in the command list.
+
+Optional self-test (requires `pytest`):
+
+```bash
+python3 -m pytest -q ~/.claude/skills/humanize-sepia-cj/tests
+```
+
+Expected output ends with `6 passed`.
 
 ## Use
 

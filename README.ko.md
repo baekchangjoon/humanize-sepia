@@ -44,7 +44,7 @@
 
 이 저장소는 `yeomin4242/humanize-sepia` 0.4.3을 기술 채널(GitHub PR 본문·Jira 티켓·Confluence 해설서·구현 계획서·사내 기술 블로그)용으로 고친 fork입니다. 스킬 이름은 `humanize-sepia-cj`이고, 원본 `humanize-sepia`와 함께 설치해도 충돌하지 않습니다. 바뀐 점은 [FORK-NOTES.md](FORK-NOTES.md)에 있습니다.
 
-필요한 것: `git`, `python3`(점검 스크립트 실행용).
+필요한 것: `git`, `python3`(스킬이 쓰는 점검 스크립트 실행용). 점검 스크립트 테스트까지 돌리려면 `pytest`도 필요합니다(`python3 -m pip install pytest`).
 
 ### Claude Code (권장)
 
@@ -84,11 +84,21 @@ ln -s ~/src/humanize-sepia/skills/humanize-sepia ~/.agents/skills/humanize-sepia
 
 ### 설치 확인
 
-점검 스크립트 테스트를 실행합니다.
+설치한 스킬의 버전을 확인합니다. 프로젝트에 설치했다면 `.claude/skills`, Codex라면 `~/.agents/skills`로 경로를 바꿉니다.
+
+```bash
+grep '^  version' ~/.claude/skills/humanize-sepia-cj/SKILL.md
+```
+
+`  version: "0.4.3-cj.2"`가 나오면 됩니다. 그다음 Claude Code를 새로 시작해 `/humanize-sepia-cj`가 명령 목록에 보이는지 확인합니다.
+
+점검 스크립트 테스트(선택, `pytest` 필요):
 
 ```bash
 python3 -m pytest -q ~/.claude/skills/humanize-sepia-cj/tests
 ```
+
+`6 passed`가 나오면 됩니다.
 
 ## 사용법
 
