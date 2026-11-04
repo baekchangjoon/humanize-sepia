@@ -3,7 +3,7 @@ name: humanize-sepia-cj
 description: 한국어 글을 작성·윤문·검토하고 AI 티로 느껴지는 반복·번역투를 다듬는다. 경험·메모·초안의 사실과 문체를 지키며, GitHub PR 본문·Jira 티켓·Confluence 해설서·구현 계획서·사내 기술 블로그는 핵심 정보를 지키며 간결하게, 자기소개서는 문항·직무에, 메일·보고서·SNS는 채널에 맞춘다. "PR 본문 다듬어줘", "컨플루언스용으로 정리", "지라 티켓 정리", "AI 티 빼고 줄여줘"에 사용.
 allowed-tools: Read, Bash(python3 *)
 metadata:
-  version: "0.4.3-cj.1"
+  version: "0.4.3-cj.2"
   upstream: "yeomin4242/humanize-sepia@110413b"
 ---
 
