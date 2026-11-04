@@ -48,7 +48,23 @@
 
 ### Claude Code (권장)
 
-저장소를 받아 두고 스킬 폴더를 사용자 스킬 경로에 연결합니다. 이후 `git pull`만 하면 업데이트됩니다.
+태그로 고정한 버전을 받아 스킬 폴더를 사용자 스킬 경로에 복사합니다.
+
+```bash
+git clone --branch v0.4.3-cj.2 --depth 1 https://github.com/baekchangjoon/humanize-sepia.git /tmp/humanize-sepia
+mkdir -p ~/.claude/skills
+rm -rf ~/.claude/skills/humanize-sepia-cj
+cp -R /tmp/humanize-sepia/skills/humanize-sepia ~/.claude/skills/humanize-sepia-cj
+rm -rf /tmp/humanize-sepia
+```
+
+새 Claude Code 세션에서 `/humanize-sepia-cj`가 목록에 보이면 설치된 것입니다. 업데이트할 때는 새 태그로 같은 명령을 다시 실행합니다. `rm -rf` 줄이 기존 설치 폴더를 지우므로, 직접 고친 내용이 있으면 먼저 백업합니다.
+
+프로젝트에서만 쓰려면 명령의 `~/.claude/skills`를 모두 해당 프로젝트의 `.claude/skills`로 바꿉니다.
+
+### Claude Code (링크 설치)
+
+저장소를 한곳에 두고 `git pull`로 업데이트하려면 스킬 폴더를 링크로 연결합니다.
 
 ```bash
 git clone https://github.com/baekchangjoon/humanize-sepia.git ~/src/humanize-sepia
@@ -56,32 +72,7 @@ mkdir -p ~/.claude/skills
 ln -s ~/src/humanize-sepia/skills/humanize-sepia ~/.claude/skills/humanize-sepia-cj
 ```
 
-특정 버전으로 고정하려면 태그를 받습니다.
-
-```bash
-git clone --branch v0.4.3-cj.2 --depth 1 https://github.com/baekchangjoon/humanize-sepia.git ~/src/humanize-sepia
-```
-
-새 Claude Code 세션에서 `/humanize-sepia-cj`가 목록에 보이면 설치된 것입니다.
-
-업데이트:
-
-```bash
-git -C ~/src/humanize-sepia pull
-```
-
-### Claude Code (복사 설치)
-
-링크 대신 폴더를 복사하려면 다음과 같이 합니다. 업데이트할 때는 기존 폴더를 지운 뒤 다시 복사합니다.
-
-```bash
-git clone --depth 1 https://github.com/baekchangjoon/humanize-sepia.git /tmp/humanize-sepia
-mkdir -p ~/.claude/skills
-rm -rf ~/.claude/skills/humanize-sepia-cj
-cp -R /tmp/humanize-sepia/skills/humanize-sepia ~/.claude/skills/humanize-sepia-cj
-```
-
-프로젝트에서만 쓰려면 같은 폴더를 해당 프로젝트의 `.claude/skills/humanize-sepia-cj`에 둡니다.
+링크 대상(`~/src/humanize-sepia`)이 작업 폴더 밖에 있어, 스킬이 `references/` 파일을 읽을 때 읽기 권한 확인이 뜰 수 있습니다. 확인 창 없이 쓰려면 복사 설치를 사용합니다.
 
 ### Codex
 
@@ -96,7 +87,7 @@ ln -s ~/src/humanize-sepia/skills/humanize-sepia ~/.agents/skills/humanize-sepia
 점검 스크립트 테스트를 실행합니다.
 
 ```bash
-python3 -m pytest -q ~/src/humanize-sepia/skills/humanize-sepia/tests
+python3 -m pytest -q ~/.claude/skills/humanize-sepia-cj/tests
 ```
 
 ## 사용법

@@ -47,12 +47,14 @@ This is a fork of `yeomin4242/humanize-sepia` 0.4.3 adapted for technical channe
 ### Claude Code (recommended)
 
 ```bash
-git clone https://github.com/baekchangjoon/humanize-sepia.git ~/src/humanize-sepia
+git clone --branch v0.4.3-cj.2 --depth 1 https://github.com/baekchangjoon/humanize-sepia.git /tmp/humanize-sepia
 mkdir -p ~/.claude/skills
-ln -s ~/src/humanize-sepia/skills/humanize-sepia ~/.claude/skills/humanize-sepia-cj
+rm -rf ~/.claude/skills/humanize-sepia-cj
+cp -R /tmp/humanize-sepia/skills/humanize-sepia ~/.claude/skills/humanize-sepia-cj
+rm -rf /tmp/humanize-sepia
 ```
 
-Update with `git -C ~/src/humanize-sepia pull`. Pin a version with `git clone --branch v0.4.3-cj.2 --depth 1 …`.
+To update, rerun with a newer tag. A symlink install (`ln -s ~/src/humanize-sepia/skills/humanize-sepia ~/.claude/skills/humanize-sepia-cj`) also works, but Claude Code may ask for read permission on `references/` because the link target is outside the working folder.
 
 ### Codex
 
@@ -62,7 +64,7 @@ mkdir -p ~/.agents/skills
 ln -s ~/src/humanize-sepia/skills/humanize-sepia ~/.agents/skills/humanize-sepia-cj
 ```
 
-Requires `python3` for the bundled check script (`python3 -m pytest -q ~/src/humanize-sepia/skills/humanize-sepia/tests`).
+Requires `python3` for the bundled check script (`python3 -m pytest -q ~/.claude/skills/humanize-sepia-cj/tests`).
 
 ## Use
 
