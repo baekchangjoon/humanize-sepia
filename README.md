@@ -4,7 +4,7 @@
 
 **A skill for writing and editing Korean from experiences, notes, and drafts.** It helps select relevant material and organize it for your reader while working within your facts and voice. Use it for job applications, business emails, reports, proposals, and research plans.
 
-Version **0.4.3** · Codex / Claude Code · Instructions and examples are primarily Korean. The skill is contained in `skills/humanize-sepia`.
+Version **0.4.3-cj.2** (fork of 0.4.3) · Codex / Claude Code · Instructions and examples are primarily Korean. The skill is contained in `skills/humanize-sepia`.
 
 ## What you can request
 
@@ -42,47 +42,36 @@ Model-specific writing gains and lower latency are not established features. Exp
 
 ## Install
 
+This is a fork of `yeomin4242/humanize-sepia` 0.4.3 adapted for technical channels (GitHub PR descriptions, Jira tickets, Confluence explainers, implementation plans, internal tech blogs). The skill name is `humanize-sepia-cj`, so it can be installed next to the original `humanize-sepia`. See [README.ko.md](README.ko.md#설치) and [FORK-NOTES.md](FORK-NOTES.md).
+
+### Claude Code (recommended)
+
+```bash
+git clone https://github.com/baekchangjoon/humanize-sepia.git ~/src/humanize-sepia
+mkdir -p ~/.claude/skills
+ln -s ~/src/humanize-sepia/skills/humanize-sepia ~/.claude/skills/humanize-sepia-cj
+```
+
+Update with `git -C ~/src/humanize-sepia pull`. Pin a version with `git clone --branch v0.4.3-cj.2 --depth 1 …`.
+
 ### Codex
 
-Ask Codex to install the pinned version:
-
-```text
-$skill-installer https://github.com/yeomin4242/humanize-sepia/tree/v0.4.3/skills/humanize-sepia
-```
-
-For a manual installation, clone the repository and copy the skill folder:
-
 ```bash
-git clone --branch v0.4.3 --depth 1 https://github.com/yeomin4242/humanize-sepia.git
+git clone https://github.com/baekchangjoon/humanize-sepia.git ~/src/humanize-sepia
 mkdir -p ~/.agents/skills
-cp -R humanize-sepia/skills/humanize-sepia ~/.agents/skills/
+ln -s ~/src/humanize-sepia/skills/humanize-sepia ~/.agents/skills/humanize-sepia-cj
 ```
 
-For project-local use, place it at `.agents/skills/humanize-sepia` in the project.
-
-### Claude Code
-
-From the same cloned repository, copy the skill to your personal skill directory:
-
-```bash
-mkdir -p ~/.claude/skills
-cp -R humanize-sepia/skills/humanize-sepia ~/.claude/skills/
-```
-
-For project-local use, place it at `.claude/skills/humanize-sepia`.
-
-If personal and project copies share the same name, ask for the actual `SKILL.md` path and version to confirm which copy was loaded.
-
-**When updating, move the existing skill folder to a backup location before replacing it.** Avoid copying a new folder inside an existing installation. If you use both tools, keep both copies on the same version.
+Requires `python3` for the bundled check script (`python3 -m pytest -q ~/src/humanize-sepia/skills/humanize-sepia/tests`).
 
 ## Use
 
-Invoke `$humanize-sepia` in Codex or `/humanize-sepia` in Claude Code and describe what you need. **There is no required input template or order.** Include your reader, direction, question, source material, experience, or draft as needed.
+Invoke `$humanize-sepia-cj` in Codex or `/humanize-sepia-cj` in Claude Code and describe what you need. **There is no required input template or order.** Include your reader, direction, question, source material, experience, or draft as needed.
 
-This example uses a fictional experience. In Claude Code, replace the invocation with `/humanize-sepia`.
+This example uses a fictional experience. In Claude Code, replace the invocation with `/humanize-sepia-cj`.
 
 ```text
-$humanize-sepia
+$humanize-sepia-cj
 
 온라인 장터의 판매자 지원 직무에 지원하려고 해.
 문항은 “기존 방식과 다르게 접근해 문제를 해결한 경험”이야.
@@ -100,19 +89,19 @@ $humanize-sepia
 You can specify a narrow edit or ask for a review:
 
 ```text
-$humanize-sepia 내용과 말투는 유지하고 두 번째 문단만 짧게 다듬어줘.
+$humanize-sepia-cj 내용과 말투는 유지하고 두 번째 문단만 짧게 다듬어줘.
 숫자와 인용문은 바꾸지 말아줘.
 글: …
 ```
 
 ```text
-$humanize-sepia 글은 고치지 말고, 독자가 이해하기 어려운 부분을 짚어줘.
+$humanize-sepia-cj 글은 고치지 말고, 독자가 이해하기 어려운 부분을 짚어줘.
 실제 오류와 선택적으로 바꿀 부분을 나눠 알려줘.
 글: …
 ```
 
 ```text
-$humanize-sepia 논리와 근거를 비판적으로 검토하고 필요한 부분을 고쳐줘.
+$humanize-sepia-cj 논리와 근거를 비판적으로 검토하고 필요한 부분을 고쳐줘.
 수정 후에는 지적한 문제가 해결됐는지와 사실·조건이 유지됐는지 확인해줘.
 글: …
 ```

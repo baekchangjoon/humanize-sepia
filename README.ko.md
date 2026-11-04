@@ -4,7 +4,7 @@
 
 **경험·메모·초안으로 한국어 글을 쓰고 다듬는 스킬입니다.** 전하려는 내용과 읽을 사람을 바탕으로 자료를 고르고, 사실과 말투를 유지하면서 문장과 구성을 살피도록 돕습니다. 자기소개서, 업무 메일·보고서·제안서, 연구계획서 등에 사용할 수 있습니다.
 
-버전 **0.4.3** · Codex / Claude Code · 지침과 예시는 주로 한국어로 작성돼 있습니다. 필요한 지침은 `skills/humanize-sepia` 폴더 안에 들어 있습니다.
+버전 **0.4.3-cj.2** (원본 0.4.3 기반 fork) · Codex / Claude Code · 지침과 예시는 주로 한국어로 작성돼 있습니다. 필요한 지침은 `skills/humanize-sepia` 폴더 안에 들어 있습니다.
 
 ## 할 수 있는 작업
 
@@ -42,47 +42,71 @@
 
 ## 설치
 
+이 저장소는 `yeomin4242/humanize-sepia` 0.4.3을 기술 채널(GitHub PR 본문·Jira 티켓·Confluence 해설서·구현 계획서·사내 기술 블로그)용으로 고친 fork입니다. 스킬 이름은 `humanize-sepia-cj`이고, 원본 `humanize-sepia`와 함께 설치해도 충돌하지 않습니다. 바뀐 점은 [FORK-NOTES.md](FORK-NOTES.md)에 있습니다.
+
+필요한 것: `git`, `python3`(점검 스크립트 실행용).
+
+### Claude Code (권장)
+
+저장소를 받아 두고 스킬 폴더를 사용자 스킬 경로에 연결합니다. 이후 `git pull`만 하면 업데이트됩니다.
+
+```bash
+git clone https://github.com/baekchangjoon/humanize-sepia.git ~/src/humanize-sepia
+mkdir -p ~/.claude/skills
+ln -s ~/src/humanize-sepia/skills/humanize-sepia ~/.claude/skills/humanize-sepia-cj
+```
+
+특정 버전으로 고정하려면 태그를 받습니다.
+
+```bash
+git clone --branch v0.4.3-cj.2 --depth 1 https://github.com/baekchangjoon/humanize-sepia.git ~/src/humanize-sepia
+```
+
+새 Claude Code 세션에서 `/humanize-sepia-cj`가 목록에 보이면 설치된 것입니다.
+
+업데이트:
+
+```bash
+git -C ~/src/humanize-sepia pull
+```
+
+### Claude Code (복사 설치)
+
+링크 대신 폴더를 복사하려면 다음과 같이 합니다. 업데이트할 때는 기존 폴더를 지운 뒤 다시 복사합니다.
+
+```bash
+git clone --depth 1 https://github.com/baekchangjoon/humanize-sepia.git /tmp/humanize-sepia
+mkdir -p ~/.claude/skills
+rm -rf ~/.claude/skills/humanize-sepia-cj
+cp -R /tmp/humanize-sepia/skills/humanize-sepia ~/.claude/skills/humanize-sepia-cj
+```
+
+프로젝트에서만 쓰려면 같은 폴더를 해당 프로젝트의 `.claude/skills/humanize-sepia-cj`에 둡니다.
+
 ### Codex
 
-Codex에서 다음과 같이 요청할 수 있습니다.
-
-```text
-$skill-installer https://github.com/yeomin4242/humanize-sepia/tree/v0.4.3/skills/humanize-sepia
-```
-
-직접 설치하려면 저장소를 받은 뒤 스킬 폴더를 복사합니다.
-
 ```bash
-git clone --branch v0.4.3 --depth 1 https://github.com/yeomin4242/humanize-sepia.git
+git clone https://github.com/baekchangjoon/humanize-sepia.git ~/src/humanize-sepia
 mkdir -p ~/.agents/skills
-cp -R humanize-sepia/skills/humanize-sepia ~/.agents/skills/
+ln -s ~/src/humanize-sepia/skills/humanize-sepia ~/.agents/skills/humanize-sepia-cj
 ```
 
-프로젝트에서만 쓰려면 해당 프로젝트의 `.agents/skills/humanize-sepia`에 넣습니다.
+### 설치 확인
 
-### Claude Code
-
-같은 저장소에서 스킬 폴더를 사용자 스킬 경로에 복사합니다.
+점검 스크립트 테스트를 실행합니다.
 
 ```bash
-mkdir -p ~/.claude/skills
-cp -R humanize-sepia/skills/humanize-sepia ~/.claude/skills/
+python3 -m pytest -q ~/src/humanize-sepia/skills/humanize-sepia/tests
 ```
-
-프로젝트에서만 쓰려면 `.claude/skills/humanize-sepia`에 넣습니다.
-
-같은 이름의 전역 설치본과 프로젝트 설치본을 함께 두었다면, 실제 읽은 `SKILL.md` 경로와 버전을 요청해 어느 설치본을 썼는지 확인할 수 있습니다.
-
-**업데이트할 때는 기존 설치 폴더를 먼저 다른 위치에 백업한 뒤 교체하세요.** 기존 폴더 안에 새 폴더를 중첩해 복사하지 않도록 주의하세요. 두 도구를 함께 쓴다면 각 설치본을 같은 버전으로 맞춥니다.
 
 ## 사용법
 
-Codex에서는 `$humanize-sepia`, Claude Code에서는 `/humanize-sepia`로 호출하고 원하는 작업을 설명해 주세요. **정해진 입력 양식이나 순서는 없습니다.** 읽을 사람, 쓰고 싶은 방향, 문항·자료·경험·초안을 편하게 보내면 됩니다.
+Codex에서는 `$humanize-sepia-cj`, Claude Code에서는 `/humanize-sepia-cj`로 호출하고 원하는 작업을 설명해 주세요. **정해진 입력 양식이나 순서는 없습니다.** 읽을 사람, 쓰고 싶은 방향, 문항·자료·경험·초안을 편하게 보내면 됩니다.
 
-아래는 가상 경험을 사용한 예시입니다. Claude Code에서는 호출 부분을 `/humanize-sepia`로 바꿔 입력하세요.
+아래는 가상 경험을 사용한 예시입니다. Claude Code에서는 호출 부분을 `/humanize-sepia-cj`로 바꿔 입력하세요.
 
 ```text
-$humanize-sepia
+$humanize-sepia-cj
 
 온라인 장터의 판매자 지원 직무에 지원하려고 해.
 문항은 “기존 방식과 다르게 접근해 문제를 해결한 경험”이야.
@@ -100,19 +124,19 @@ $humanize-sepia
 수정 범위를 구체적으로 말해도 됩니다.
 
 ```text
-$humanize-sepia 내용과 말투는 유지하고 두 번째 문단만 짧게 다듬어줘.
+$humanize-sepia-cj 내용과 말투는 유지하고 두 번째 문단만 짧게 다듬어줘.
 숫자와 인용문은 바꾸지 말아줘.
 글: …
 ```
 
 ```text
-$humanize-sepia 글은 고치지 말고, 독자가 이해하기 어려운 부분을 짚어줘.
+$humanize-sepia-cj 글은 고치지 말고, 독자가 이해하기 어려운 부분을 짚어줘.
 실제 오류와 선택적으로 바꿀 부분을 나눠 알려줘.
 글: …
 ```
 
 ```text
-$humanize-sepia 논리와 근거를 비판적으로 검토하고 필요한 부분을 고쳐줘.
+$humanize-sepia-cj 논리와 근거를 비판적으로 검토하고 필요한 부분을 고쳐줘.
 수정 후에는 지적한 문제가 해결됐는지와 사실·조건이 유지됐는지 확인해줘.
 글: …
 ```
