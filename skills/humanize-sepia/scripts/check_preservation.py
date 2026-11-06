@@ -26,7 +26,7 @@ PROTECTED_PATTERNS = {
     "status_emoji": r"[🟢🟡🔴🔵✅❌⚠️]",
 }
 REGISTER_PATTERNS = {
-    "handa": r"(?:다|까)\.(?=\s|$)",
+    "handa": r"(?<!니)(?:다|까)\.(?=\s|$)",
     "hamnida": r"(?:니다|니까)\.(?=\s|$)",
     "haeyo": r"(?:요)\.(?=\s|$)",
 }

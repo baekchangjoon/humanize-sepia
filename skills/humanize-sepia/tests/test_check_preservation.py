@@ -68,3 +68,9 @@ def test_cli_exclude_fenced_flag(tmp_path):
     edited_file.write_text("A가 B를 호출한다.\n```text\n[A] --호출--> [B]\n```\n", encoding="utf-8")
     assert checker.main([str(source_file), str(edited_file), "--max-ratio", "1.0"]) == 1
     assert checker.main([str(source_file), str(edited_file), "--max-ratio", "1.0", "--exclude-fenced"]) == 0
+
+
+def test_pure_hamnida_is_not_mixed():
+    counts = checker.register_counts("반영했습니다. 확인했습니다. 정리했습니다.")
+    assert counts["handa"] == 0
+    assert checker.is_mixed_register(counts) is False
