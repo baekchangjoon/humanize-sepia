@@ -17,14 +17,15 @@
   - 아키텍처·흐름은 행위자와 행위를 적은 아스키 다이어그램으로 그린다.
   - Confluence에 게시할 때 페이지와 표 너비를 full-width로 설정한다.
   - 점검 스크립트에 `--exclude-fenced`를 추가했다. 다이어그램·코드 블록을 빼고 분량을 잰다.
+  - 한 줄에 한 문장, 한 문장에 사실 하나, 괄호 부연 하나, 본문 80자 이내로 쓴다. 점검 스크립트의 `--max-line 80`이 2문장 이상이거나 80자를 넘는 줄을 보고한다.
 - 보호 구간을 명시했다: 인라인 코드, 경로, URL, REQ-ID, 이슈 번호, 수치, 체크박스, 상태 기호, 에이전트 지시 블록.
 - `scripts/check_preservation.py`를 추가했다. 원문과 결과를 대조해 보호 토큰 누락, 분량 비율, 종결체 혼용을 확인한다. 이를 위해 `allowed-tools`에 `Bash(python3 *)`를 추가했다.
 
 ## 점검 스크립트 사용
 
 ```bash
-python3 skills/humanize-sepia/scripts/check_preservation.py <원문.md> <결과.md> --max-ratio 1.0 [--exclude-fenced]
+python3 skills/humanize-sepia/scripts/check_preservation.py <원문.md> <결과.md> --max-line 80 --max-ratio 1.0 [--exclude-fenced]
 python3 -m pytest -q skills/humanize-sepia/tests
 ```
 
-종료 코드는 0(통과), 1(보호 토큰 누락 또는 분량 초과), 2(사용법 오류)다.
+종료 코드는 0(통과), 1(보호 토큰 누락, 분량 초과, `--max-line` 지정 시 긴 줄), 2(사용법 오류)다.

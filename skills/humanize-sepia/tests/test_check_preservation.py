@@ -74,3 +74,27 @@ def test_pure_hamnida_is_not_mixed():
     counts = checker.register_counts("반영했습니다. 확인했습니다. 정리했습니다.")
     assert counts["handa"] == 0
     assert checker.is_mixed_register(counts) is False
+
+
+def test_long_lines_flags_two_sentences_and_overlong_prose():
+    text = (
+        "## 제목은 길어도 검사하지 않는다 제목은 길어도 검사하지 않는다 제목은 길어도 검사하지 않는다 제목은 길어도\n"
+        "축 A는 비용을 줄이려 했다. 원안은 SDK에서 쓸 수 없었다.\n"
+        "- 스펙: `docs/superpowers/specs/2026-07-27-followup-hardening-design.md`\n"
+        "- 5-SP 후 이월 백로그 처리(사용성 개선, PR 26~31), 스펙 경로와 리뷰 이력, 설계 리뷰 15건 반영, 후속 dispatch 1회 일정까지 한 줄에 다 넣었다\n"
+        "| 표 셀은 길어도 | 검사하지 않는다 검사하지 않는다 검사하지 않는다 검사하지 않는다 검사하지 않는다 |\n"
+    )
+    flagged = checker.long_lines(text, 80)
+    assert [item["line"] for item in flagged] == [2, 4]
+    assert flagged[0]["sentences"] == 2
+
+
+def test_cli_max_line_flag(tmp_path):
+    source_file = tmp_path / "s.md"
+    edited_file = tmp_path / "e.md"
+    source_file.write_text("A는 B다. C는 D다.\n", encoding="utf-8")
+    edited_file.write_text("A는 B다. C는 D다.\n", encoding="utf-8")
+    assert checker.main([str(source_file), str(edited_file)]) == 0
+    assert checker.main([str(source_file), str(edited_file), "--max-line", "80"]) == 1
+    edited_file.write_text("- A는 B다.\n- C는 D다.\n", encoding="utf-8")
+    assert checker.main([str(source_file), str(edited_file), "--max-line", "80"]) == 0
