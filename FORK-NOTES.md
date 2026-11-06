@@ -8,13 +8,21 @@
 - 기술 채널을 추가했다: GitHub PR 본문, Jira 티켓, Confluence 해설서, 구현 계획서, 사내 기술 블로그. 이 채널에서는 `references/tech-channels.md` 하나만 읽는다.
 - 축약 규칙을 추가했다. 사용자가 축약을 허용하면 중복·부연·자기평가를 덜어 분량을 원문 이하로 맞춘다. 비율을 지정하면 그 비율을 따른다.
 - 의미 보호 규칙을 추가했다(cj.2): 결정의 근거, 기존 결함·실패 조건, 주의·경고, 용어 정의, 범위 한정 문장은 축약 대상이 아니다. 분량 목표는 의미 보호보다 아래다.
+- 말투·언어·서식 규칙을 추가했다(cj.3).
+  - 기존 문서는 원문 문체를 따르고 새 글은 합니다체로 쓴다. 코드 블록·인용·표 셀 키워드·단순 나열은 예외다.
+  - README와 PR 본문은 한국어, PR 제목과 커밋 메시지는 영어로 쓴다.
+  - 줄바꿈(한 줄 한 내용, 문단 3문장 이하), 비교는 표로, 표는 MECE로 만든다.
+  - 모든 채널은 결론으로 시작한다. 섹션이 4개 이상인 글은 `결론·다음 행동`으로 끝낸다.
+  - 아키텍처·흐름은 행위자와 행위를 적은 아스키 다이어그램으로 그린다.
+  - Confluence에 게시할 때 페이지와 표 너비를 full-width로 설정한다.
+  - 점검 스크립트에 `--exclude-fenced`를 추가했다. 다이어그램·코드 블록을 빼고 분량을 잰다.
 - 보호 구간을 명시했다: 인라인 코드, 경로, URL, REQ-ID, 이슈 번호, 수치, 체크박스, 상태 기호, 에이전트 지시 블록.
 - `scripts/check_preservation.py`를 추가했다. 원문과 결과를 대조해 보호 토큰 누락, 분량 비율, 종결체 혼용을 확인한다. 이를 위해 `allowed-tools`에 `Bash(python3 *)`를 추가했다.
 
 ## 점검 스크립트 사용
 
 ```bash
-python3 skills/humanize-sepia/scripts/check_preservation.py <원문.md> <결과.md> --max-ratio 1.0
+python3 skills/humanize-sepia/scripts/check_preservation.py <원문.md> <결과.md> --max-ratio 1.0 [--exclude-fenced]
 python3 -m pytest -q skills/humanize-sepia/tests
 ```
 

@@ -44,3 +44,27 @@ def test_cli_exit_codes(tmp_path):
     edited_file.write_text("내용 삭제", encoding="utf-8")
     assert checker.main([str(source_file), str(edited_file)]) == 1
     assert checker.main([str(source_file), str(tmp_path / "none.md")]) == 2
+
+
+def test_exclude_fenced_ignores_added_diagram_in_length():
+    source = "API가 요청을 받아 큐에 넣는다.\n"
+    diagram = "```text\n[사용자] --요청--> [API] --적재--> [Queue]\n```\n"
+    edited = "API가 요청을 받아 큐에 넣는다.\n\n" + diagram
+    assert checker.build_report(source, edited, 1.0)["over_budget"] is True
+    assert checker.build_report(source, edited, 1.0, exclude_fenced=True)["over_budget"] is False
+
+
+def test_exclude_fenced_still_reports_missing_code_tokens():
+    source = "설정은 `busy_timeout=5000`이다.\n```text\nA --> B\n```\n"
+    edited = "설정을 바꿨다.\n"
+    missing = checker.build_report(source, edited, None, exclude_fenced=True)["missing"]
+    assert "`busy_timeout=5000`" in missing["inline_code"]
+
+
+def test_cli_exclude_fenced_flag(tmp_path):
+    source_file = tmp_path / "s.md"
+    edited_file = tmp_path / "e.md"
+    source_file.write_text("A가 B를 호출한다.\n", encoding="utf-8")
+    edited_file.write_text("A가 B를 호출한다.\n```text\n[A] --호출--> [B]\n```\n", encoding="utf-8")
+    assert checker.main([str(source_file), str(edited_file), "--max-ratio", "1.0"]) == 1
+    assert checker.main([str(source_file), str(edited_file), "--max-ratio", "1.0", "--exclude-fenced"]) == 0

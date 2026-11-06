@@ -2,13 +2,13 @@
 
 Compares the source draft and the edited draft and reports:
   - protected tokens that disappeared (inline code, paths, URLs, REQ/issue IDs, numbers, checkboxes, status emoji)
-  - length ratio against an optional budget
+  - length ratio against an optional budget (optionally excluding fenced code blocks such as ASCII diagrams)
   - mixed sentence-ending registers (한다체 / 합니다체 / 해요체)
 
 Exit code 0 = pass, 1 = protected token missing or budget exceeded, 2 = usage error.
 
 Usage:
-    python3 check_preservation.py <source.md> <edited.md> [--max-ratio 1.0] [--json]
+    python3 check_preservation.py <source.md> <edited.md> [--max-ratio 1.0] [--exclude-fenced] [--json]
 """
 import argparse
 import json
@@ -74,8 +74,14 @@ def is_mixed_register(counts):
     return len(used) > 1 and min(used) >= 2
 
 
-def build_report(source_text, edited_text, max_ratio):
-    length_ratio = len(edited_text.strip()) / max(len(source_text.strip()), 1)
+def measured_length(markdown_text, exclude_fenced):
+    text = strip_fenced_code(markdown_text) if exclude_fenced else markdown_text
+    return len(text.strip())
+
+
+def build_report(source_text, edited_text, max_ratio, exclude_fenced=False):
+    source_length = measured_length(source_text, exclude_fenced)
+    length_ratio = measured_length(edited_text, exclude_fenced) / max(source_length, 1)
     missing = missing_tokens(source_text, edited_text)
     registers = register_counts(edited_text)
     return {
@@ -93,6 +99,8 @@ def main(argv=None):
     parser.add_argument("source")
     parser.add_argument("edited")
     parser.add_argument("--max-ratio", type=float, default=None)
+    parser.add_argument("--exclude-fenced", action="store_true",
+                        help="measure length without fenced code blocks (diagrams, code)")
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
     try:
@@ -101,7 +109,7 @@ def main(argv=None):
     except OSError as error:
         print(f"error: {error}", file=sys.stderr)
         return 2
-    report = build_report(source_text, edited_text, args.max_ratio)
+    report = build_report(source_text, edited_text, args.max_ratio, args.exclude_fenced)
     if args.json:
         print(json.dumps(report, ensure_ascii=False, indent=2))
     else:
