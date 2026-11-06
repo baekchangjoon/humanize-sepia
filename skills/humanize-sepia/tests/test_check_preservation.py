@@ -98,3 +98,25 @@ def test_cli_max_line_flag(tmp_path):
     assert checker.main([str(source_file), str(edited_file), "--max-line", "80"]) == 1
     edited_file.write_text("- A는 B다.\n- C는 D다.\n", encoding="utf-8")
     assert checker.main([str(source_file), str(edited_file), "--max-line", "80"]) == 0
+
+
+def test_middle_dot_lines_skip_code_and_quotes():
+    text = (
+        "리포트·매트릭스·JSON이 단위를 인지한다.\n"
+        "- 설정 키 `a·b`는 그대로 둔다.\n"
+        "> 인용문·원문은 그대로 둔다.\n"
+        "```text\n[A]·[B]\n```\n"
+        "리포트, 매트릭스, JSON이 단위를 인지한다.\n"
+    )
+    assert [item["line"] for item in checker.middle_dot_lines(text)] == [1]
+
+
+def test_cli_no_middle_dot_flag(tmp_path):
+    source_file = tmp_path / "s.md"
+    edited_file = tmp_path / "e.md"
+    source_file.write_text("코드·경로를 지킨다.\n", encoding="utf-8")
+    edited_file.write_text("코드·경로를 지킨다.\n", encoding="utf-8")
+    assert checker.main([str(source_file), str(edited_file)]) == 0
+    assert checker.main([str(source_file), str(edited_file), "--no-middle-dot"]) == 1
+    edited_file.write_text("코드, 경로를 지킨다.\n", encoding="utf-8")
+    assert checker.main([str(source_file), str(edited_file), "--no-middle-dot"]) == 0

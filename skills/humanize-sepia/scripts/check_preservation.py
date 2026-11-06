@@ -5,11 +5,12 @@ Compares the source draft and the edited draft and reports:
   - length ratio against an optional budget (optionally excluding fenced code blocks such as ASCII diagrams)
   - mixed sentence-ending registers (한다체 / 합니다체 / 해요체)
   - prose lines that hold two or more sentences or exceed a length limit (optional)
+  - prose lines that use the middle dot (·) as a list separator (optional)
 
-Exit code 0 = pass, 1 = protected token missing, budget exceeded or long lines (with --max-line), 2 = usage error.
+Exit code 0 = pass, 1 = protected token missing, budget exceeded or long lines (with --max-line) or middle dots (with --no-middle-dot), 2 = usage error.
 
 Usage:
-    python3 check_preservation.py <source.md> <edited.md> [--max-ratio 1.0] [--exclude-fenced] [--max-line 80] [--json]
+    python3 check_preservation.py <source.md> <edited.md> [--max-ratio 1.0] [--exclude-fenced] [--max-line 80] [--no-middle-dot] [--json]
 """
 import argparse
 import json
@@ -105,7 +106,27 @@ def long_lines(markdown_text, max_length):
     return flagged
 
 
-def build_report(source_text, edited_text, max_ratio, exclude_fenced=False, max_line=None):
+def prose_lines(markdown_text):
+    in_fence = False
+    for line_number, line_text in enumerate(markdown_text.splitlines(), start=1):
+        if line_text.strip().startswith("```"):
+            in_fence = not in_fence
+            continue
+        if not in_fence and line_text.strip():
+            yield line_number, line_text
+
+
+def middle_dot_lines(markdown_text):
+    flagged = []
+    for line_number, line_text in prose_lines(markdown_text):
+        if line_text.strip().startswith(">"):
+            continue
+        if "·" in re.sub(r"`[^`\n]+`", "C", line_text):
+            flagged.append({"line": line_number, "text": line_text.strip()[:60]})
+    return flagged
+
+
+def build_report(source_text, edited_text, max_ratio, exclude_fenced=False, max_line=None, no_middle_dot=False):
     source_length = measured_length(source_text, exclude_fenced)
     length_ratio = measured_length(edited_text, exclude_fenced) / max(source_length, 1)
     missing = missing_tokens(source_text, edited_text)
@@ -118,6 +139,7 @@ def build_report(source_text, edited_text, max_ratio, exclude_fenced=False, max_
         "registers": registers,
         "mixed_register": is_mixed_register(registers),
         "long_lines": long_lines(edited_text, max_line) if max_line else [],
+        "middle_dots": middle_dot_lines(edited_text) if no_middle_dot else [],
     }
 
 
@@ -130,6 +152,8 @@ def main(argv=None):
                         help="measure length without fenced code blocks (diagrams, code)")
     parser.add_argument("--max-line", type=int, default=None,
                         help="flag prose lines longer than this or holding 2+ sentences")
+    parser.add_argument("--no-middle-dot", action="store_true",
+                        help="flag prose lines that use the middle dot (·)")
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
     try:
@@ -138,18 +162,21 @@ def main(argv=None):
     except OSError as error:
         print(f"error: {error}", file=sys.stderr)
         return 2
-    report = build_report(source_text, edited_text, args.max_ratio, args.exclude_fenced, args.max_line)
+    report = build_report(source_text, edited_text, args.max_ratio, args.exclude_fenced, args.max_line, args.no_middle_dot)
     if args.json:
         print(json.dumps(report, ensure_ascii=False, indent=2))
     else:
         print(f"length_ratio={report['length_ratio']} over_budget={report['over_budget']} "
               f"missing={report['missing_count']} mixed_register={report['mixed_register']} {report['registers']} "
-              f"long_lines={len(report['long_lines'])}")
+              f"long_lines={len(report['long_lines'])} middle_dots={len(report['middle_dots'])}")
         for kind, items in report["missing"].items():
             print(f"  missing {kind}: {', '.join(items[:8])}")
         for item in report["long_lines"][:8]:
             print(f"  long line {item['line']} (len={item['length']}, sentences={item['sentences']}): {item['text']}")
-    failed = report["missing_count"] > 0 or report["over_budget"] or bool(report["long_lines"])
+        for item in report["middle_dots"][:8]:
+            print(f"  middle dot line {item['line']}: {item['text']}")
+    failed = (report["missing_count"] > 0 or report["over_budget"]
+              or bool(report["long_lines"]) or bool(report["middle_dots"]))
     return 1 if failed else 0
 
 

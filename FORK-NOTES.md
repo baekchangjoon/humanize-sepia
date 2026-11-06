@@ -15,6 +15,7 @@
   - 모든 글은 결론으로 시작한다. Confluence 해설서·구현 계획서·기술 블로그는 양괄식으로 쓴다. 끝의 `결론·다음 행동`에 결론을 다시 쓰고 결정과 다음 행동을 정리한다.
   - 우선순위는 의미 보호 > 서식 > 분량 목표다. 서식 때문에 분량 목표를 넘기면 보고만 한다.
   - 아키텍처·흐름은 행위자와 행위를 적은 아스키 다이어그램으로 그린다.
+  - 가운뎃점(`·`)을 쓰지 않고 쉼표로 나열한다. 점검 스크립트의 `--no-middle-dot`이 코드, 인용 밖의 `·`를 보고한다. 이에 맞춰 SKILL.md, tech-channels.md, Claude 모델 지침의 `·`도 쉼표로 바꿨다.
   - Confluence에 게시할 때 페이지와 표 너비를 full-width로 설정한다.
   - 점검 스크립트에 `--exclude-fenced`를 추가했다. 다이어그램·코드 블록을 빼고 분량을 잰다.
   - 한 줄에 한 문장, 한 문장에 사실 하나, 괄호 부연 하나, 본문 80자 이내로 쓴다. 점검 스크립트의 `--max-line 80`이 2문장 이상이거나 80자를 넘는 줄을 보고한다.
@@ -24,8 +25,8 @@
 ## 점검 스크립트 사용
 
 ```bash
-python3 skills/humanize-sepia/scripts/check_preservation.py <원문.md> <결과.md> --max-line 80 --max-ratio 1.0 [--exclude-fenced]
+python3 skills/humanize-sepia/scripts/check_preservation.py <원문.md> <결과.md> --max-line 80 --no-middle-dot --max-ratio 1.0 [--exclude-fenced]
 python3 -m pytest -q skills/humanize-sepia/tests
 ```
 
-종료 코드는 0(통과), 1(보호 토큰 누락, 분량 초과, `--max-line` 지정 시 긴 줄), 2(사용법 오류)다.
+종료 코드는 0(통과), 1(보호 토큰 누락, 분량 초과, `--max-line` 지정 시 긴 줄, `--no-middle-dot` 지정 시 가운뎃점), 2(사용법 오류)다.
