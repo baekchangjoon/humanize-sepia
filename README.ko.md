@@ -4,7 +4,7 @@
 
 **경험·메모·초안으로 한국어 글을 쓰고 다듬는 스킬입니다.** 전하려는 내용과 읽을 사람을 바탕으로 자료를 고르고, 사실과 말투를 유지하면서 문장과 구성을 살피도록 돕습니다. 자기소개서, 업무 메일·보고서·제안서, 연구계획서 등에 사용할 수 있습니다.
 
-버전 **0.4.3-cj.2** (원본 0.4.3 기반 fork) · Codex / Claude Code · 지침과 예시는 주로 한국어로 작성돼 있습니다. 필요한 지침은 `skills/humanize-sepia` 폴더 안에 들어 있습니다.
+버전 **0.4.3-cj.3** (원본 0.4.3 기반 fork) · Codex / Claude Code · 지침과 예시는 주로 한국어로 작성돼 있습니다. 필요한 지침은 `skills/humanize-sepia` 폴더 안에 들어 있습니다.
 
 ## 할 수 있는 작업
 
@@ -42,7 +42,7 @@
 
 ## 설치
 
-이 저장소는 `yeomin4242/humanize-sepia` 0.4.3을 기술 채널(GitHub PR 본문·Jira 티켓·Confluence 해설서·구현 계획서·사내 기술 블로그)용으로 고친 fork입니다. 스킬 이름은 `humanize-sepia-cj`이고, 원본 `humanize-sepia`와 함께 설치해도 충돌하지 않습니다. 바뀐 점은 [FORK-NOTES.md](FORK-NOTES.md)에 있습니다.
+이 저장소는 `yeomin4242/humanize-sepia` 0.4.3을 기술 채널(GitHub PR 본문·Jira 티켓·Confluence 해설서·구현 계획서·사내 기술 블로그·README·커밋 메시지)용으로 고친 fork입니다. 스킬 이름은 `humanize-sepia-cj`이고, 원본 `humanize-sepia`와 함께 설치해도 충돌하지 않습니다. 바뀐 점은 [FORK-NOTES.md](FORK-NOTES.md)에 있습니다.
 
 필요한 것: `git`, `python3`(스킬이 쓰는 점검 스크립트 실행용). 점검 스크립트 테스트까지 돌리려면 `pytest`도 필요합니다(`python3 -m pip install pytest`).
 
@@ -51,7 +51,7 @@
 태그로 고정한 버전을 받아 스킬 폴더를 사용자 스킬 경로에 복사합니다.
 
 ```bash
-git clone --branch v0.4.3-cj.2 --depth 1 https://github.com/baekchangjoon/humanize-sepia.git /tmp/humanize-sepia
+git clone --branch v0.4.3-cj.3 --depth 1 https://github.com/baekchangjoon/humanize-sepia.git /tmp/humanize-sepia
 mkdir -p ~/.claude/skills
 rm -rf ~/.claude/skills/humanize-sepia-cj
 cp -R /tmp/humanize-sepia/skills/humanize-sepia ~/.claude/skills/humanize-sepia-cj
@@ -90,7 +90,7 @@ ln -s ~/src/humanize-sepia/skills/humanize-sepia ~/.agents/skills/humanize-sepia
 grep '^  version' ~/.claude/skills/humanize-sepia-cj/SKILL.md
 ```
 
-`  version: "0.4.3-cj.2"`가 나오면 됩니다. 그다음 Claude Code를 새로 시작해 `/humanize-sepia-cj`가 명령 목록에 보이는지 확인합니다.
+`  version: "0.4.3-cj.3"`가 나오면 됩니다. 그다음 Claude Code를 새로 시작해 `/humanize-sepia-cj`가 명령 목록에 보이는지 확인합니다.
 
 점검 스크립트 테스트(선택, `pytest` 필요):
 

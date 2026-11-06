@@ -4,7 +4,7 @@
 
 **A skill for writing and editing Korean from experiences, notes, and drafts.** It helps select relevant material and organize it for your reader while working within your facts and voice. Use it for job applications, business emails, reports, proposals, and research plans.
 
-Version **0.4.3-cj.2** (fork of 0.4.3) · Codex / Claude Code · Instructions and examples are primarily Korean. The skill is contained in `skills/humanize-sepia`.
+Version **0.4.3-cj.3** (fork of 0.4.3) · Codex / Claude Code · Instructions and examples are primarily Korean. The skill is contained in `skills/humanize-sepia`.
 
 ## What you can request
 
@@ -42,7 +42,7 @@ Model-specific writing gains and lower latency are not established features. Exp
 
 ## Install
 
-This is a fork of `yeomin4242/humanize-sepia` 0.4.3 adapted for technical channels (GitHub PR descriptions, Jira tickets, Confluence explainers, implementation plans, internal tech blogs). The skill name is `humanize-sepia-cj`, so it can be installed next to the original `humanize-sepia`. Changes are listed in [FORK-NOTES.md](FORK-NOTES.md).
+This is a fork of `yeomin4242/humanize-sepia` 0.4.3 adapted for technical channels (GitHub PR descriptions, Jira tickets, Confluence explainers, implementation plans, internal tech blogs, READMEs, commit messages). The skill name is `humanize-sepia-cj`, so it can be installed next to the original `humanize-sepia`. Changes are listed in [FORK-NOTES.md](FORK-NOTES.md).
 
 Requirements: `git` and `python3` (the skill runs a bundled check script). `pytest` is needed only for the optional self-test (`python3 -m pip install pytest`).
 
@@ -51,7 +51,7 @@ Requirements: `git` and `python3` (the skill runs a bundled check script). `pyte
 Download the tagged version and copy the skill folder to your personal skill directory:
 
 ```bash
-git clone --branch v0.4.3-cj.2 --depth 1 https://github.com/baekchangjoon/humanize-sepia.git /tmp/humanize-sepia
+git clone --branch v0.4.3-cj.3 --depth 1 https://github.com/baekchangjoon/humanize-sepia.git /tmp/humanize-sepia
 mkdir -p ~/.claude/skills
 rm -rf ~/.claude/skills/humanize-sepia-cj
 cp -R /tmp/humanize-sepia/skills/humanize-sepia ~/.claude/skills/humanize-sepia-cj
@@ -88,7 +88,7 @@ Check the installed version (use `.claude/skills` for a project install, `~/.age
 grep '^  version' ~/.claude/skills/humanize-sepia-cj/SKILL.md
 ```
 
-Expected output: `  version: "0.4.3-cj.2"`. Then start a new Claude Code session and confirm `/humanize-sepia-cj` appears in the command list.
+Expected output: `  version: "0.4.3-cj.3"`. Then start a new Claude Code session and confirm `/humanize-sepia-cj` appears in the command list.
 
 Optional self-test (requires `pytest`):
 
